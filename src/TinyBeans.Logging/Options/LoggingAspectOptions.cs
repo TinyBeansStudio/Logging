@@ -9,15 +9,15 @@ namespace TinyBeans.Logging.Options {
 
         /// <summary>
         /// The message template to use when executing a method.
-        /// Available template values are: 'assemblyName', 'className', and 'methodName'
+        /// Available template values are: '{AssemblyName}', '{ClassName}', and '{MethodName}'
         /// </summary>
-        public string MethodExecutingTemplate { get; set; } = "Executing method '{methodName}' on class '{className}' in assembly {assemblyName}.";
+        public string MethodExecutingTemplate { get; set; } = "Executing method {MethodName} on class {ClassName} in assembly {AssemblyName}.";
 
         /// <summary>
         /// The message template to use when a method has executed.
-        /// Available template values are: 'assemblyName', 'className', and 'methodName'
+        /// Available template values are: '{AssemblyName}', '{ClassName}', and '{MethodName}'
         /// </summary>
-        public string MethodExecutedTemplate { get; set; } = "Executed method '{methodName}' on class '{className}' in assembly {assemblyName}.";
+        public string MethodExecutedTemplate { get; set; } = "Executed method {MethodName} on class {ClassName} in assembly {AssemblyName}.";
 
         /// <summary>
         /// The log level to write out executing and executed logs.
@@ -26,8 +26,8 @@ namespace TinyBeans.Logging.Options {
 
         /// <summary>
         /// The message template to use for scopes.
-        /// Available template values are: 'assemblyName', 'className', and 'methodName'
+        /// Available template values are: '{AssemblyName}', '{ClassName}', and '{MethodName}'
         /// </summary>
-        public string ScopeTemplate { get; set; } = "{className}.{methodName} ({assemblyName})";
+        public string ScopeTemplate { get; set; } = "{ClassName}.{MethodName} ({AssemblyName})";
     }
 }

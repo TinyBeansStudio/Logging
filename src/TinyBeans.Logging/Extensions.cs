@@ -7,11 +7,21 @@ using TinyBeans.Logging.Defaults;
 using TinyBeans.Logging.Options;
 
 namespace TinyBeans.Logging {
+    internal static class Extensions {
+
+        // ToDo: Benchmark this vs other options.
+        public static string ApplyNames(this string value, (string AssemblyName, string ClassName, string MethodName) names) {
+            return value
+                .Replace(Constants.AssemblyField, names.AssemblyName)
+                .Replace(Constants.ClassField, names.ClassName)
+                .Replace(Constants.MethodField, names.MethodName);
+        }
+    }
 
     /// <summary>
     /// Extensions for <see cref="Logging"/>.
     /// </summary>
-    public static class Extensions {
+    public static class LoggingAspectExtensions {
 
         /// <summary>
         /// Adds services required for using <see cref="IAsyncLoggingAspect{T}"/> using the default options.
