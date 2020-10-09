@@ -38,13 +38,13 @@ namespace TinyBeans.Logging.Defaults {
         public async Task InvokeAsync(Func<Task> method) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 await method();
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
         }
 
         /// <summary>
@@ -57,13 +57,13 @@ namespace TinyBeans.Logging.Defaults {
         public async Task InvokeAsync<P1>(Func<P1, Task> method, P1 parameter1) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 await method(parameter1);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
         }
 
         /// <summary>
@@ -78,13 +78,13 @@ namespace TinyBeans.Logging.Defaults {
         public async Task InvokeAsync<P1, P2>(Func<P1, P2, Task> method, P1 parameter1, P2 parameter2) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 await method(parameter1, parameter2);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
         }
 
         /// <summary>
@@ -101,13 +101,13 @@ namespace TinyBeans.Logging.Defaults {
         public async Task InvokeAsync<P1, P2, P3>(Func<P1, P2, P3, Task> method, P1 parameter1, P2 parameter2, P3 parameter3) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 await method(parameter1, parameter2, parameter3);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
         }
 
         /// <summary>
@@ -126,13 +126,13 @@ namespace TinyBeans.Logging.Defaults {
         public async Task InvokeAsync<P1, P2, P3, P4>(Func<P1, P2, P3, P4, Task> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 await method(parameter1, parameter2, parameter3, parameter4);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
         }
 
         /// <summary>
@@ -153,13 +153,13 @@ namespace TinyBeans.Logging.Defaults {
         public async Task InvokeAsync<P1, P2, P3, P4, P5>(Func<P1, P2, P3, P4, P5, Task> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4, P5 parameter5) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 await method(parameter1, parameter2, parameter3, parameter4, parameter5);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
         }
 
         /// <summary>
@@ -171,14 +171,14 @@ namespace TinyBeans.Logging.Defaults {
         public async Task<R> InvokeAsync<R>(Func<Task<R>> method) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             R result;
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 result = await method();
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
 
             return result;
         }
@@ -194,14 +194,14 @@ namespace TinyBeans.Logging.Defaults {
         public async Task<R> InvokeAsync<P1, R>(Func<P1, Task<R>> method, P1 parameter1) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             R result;
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 result = await method(parameter1);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
 
             return result;
         }
@@ -219,14 +219,14 @@ namespace TinyBeans.Logging.Defaults {
         public async Task<R> InvokeAsync<P1, P2, R>(Func<P1, P2, Task<R>> method, P1 parameter1, P2 parameter2) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             R result;
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 result = await method(parameter1, parameter2);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
 
             return result;
         }
@@ -246,14 +246,14 @@ namespace TinyBeans.Logging.Defaults {
         public async Task<R> InvokeAsync<P1, P2, P3, R>(Func<P1, P2, P3, Task<R>> method, P1 parameter1, P2 parameter2, P3 parameter3) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             R result;
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 result = await method(parameter1, parameter2, parameter3);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
 
             return result;
         }
@@ -275,14 +275,14 @@ namespace TinyBeans.Logging.Defaults {
         public async Task<R> InvokeAsync<P1, P2, P3, P4, R>(Func<P1, P2, P3, P4, Task<R>> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             R result;
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 result = await method(parameter1, parameter2, parameter3, parameter4);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
 
             return result;
         }
@@ -306,14 +306,14 @@ namespace TinyBeans.Logging.Defaults {
         public async Task<R> InvokeAsync<P1, P2, P3, P4, P5, R>(Func<P1, P2, P3, P4, P5, Task<R>> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4, P5 parameter5) {
             var (assemblyName, className, methodName) = Descriptors(method);
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, assemblyName, className, methodName);
 
             R result;
             using (var _ = Logger.BeginScope(_options.CurrentValue.ScopeTemplate, assemblyName, className, methodName)) {
                 result = await method(parameter1, parameter2, parameter3, parameter4, parameter5);
             }
 
-            Logger.LogInformation(_options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, assemblyName, className, methodName);
 
             return result;
         }
