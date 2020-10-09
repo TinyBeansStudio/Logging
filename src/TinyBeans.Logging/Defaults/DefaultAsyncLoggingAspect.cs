@@ -16,6 +16,9 @@ namespace TinyBeans.Logging.Defaults {
     public class DefaultAsyncLoggingAspect<T> : IAsyncLoggingAspect<T> {
         private readonly IOptionsMonitor<LoggingAspectOptions> _options;
 
+        private static ConcurrentDictionary<string, int[]> _templateOrders = new ConcurrentDictionary<string, int[]>();
+        private static ConcurrentDictionary<Delegate, (string assemblyName, string className, string methodName)> _delegateCache = new ConcurrentDictionary<Delegate, (string assemblyName, string className, string methodName)>();
+
         /// <summary>
         /// The logger used when writing additional logs.
         /// </summary>
@@ -296,28 +299,33 @@ namespace TinyBeans.Logging.Defaults {
         }
 
         private void LogExecuting(Delegate method) {
-            var names = Names(_options.CurrentValue.MethodExecutingTemplate, method);
+            var (name1, name2, name3) = Names(_options.CurrentValue.MethodExecutingTemplate, method);
 
-            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, names.Name1, names.Name2, names.Name3);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, name1, name2, name3);
         }
 
         private void LogExecuted(Delegate method) {
-            var names = Names(_options.CurrentValue.MethodExecutedTemplate, method);
+            var (name1, name2, name3) = Names(_options.CurrentValue.MethodExecutedTemplate, method);
 
-            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, names.Name1, names.Name2, names.Name3);
+            Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, name1, name2, name3);
         }
 
         private IDisposable GetScope(Delegate method) {
-            var names = Names(_options.CurrentValue.ScopeTemplate, method);
+            var (name1, name2, name3) = Names(_options.CurrentValue.ScopeTemplate, method);
 
-            return Logger.BeginScope(_options.CurrentValue.ScopeTemplate, names.Name1, names.Name2, names.Name3);
+            return Logger.BeginScope(_options.CurrentValue.ScopeTemplate, name1, name2, name3);
         }
 
-        private static ConcurrentDictionary<string, int[]> _templateOrders = new ConcurrentDictionary<string, int[]>();
+        // Benchmarked to ~900ns or 0.0000009s to execute all 3 templates in one go.
+        //   I am deeming this acceptable to allow for customization of the log messages and scope.
         private (string Name1, string Name2, string Name3) Names(string template, Delegate method) {
-            var assemblyName = method.Method.DeclaringType?.Assembly.GetName().Name ?? string.Empty;
-            var className = method.Method.DeclaringType?.Name ?? string.Empty;
-            var methodName = method.Method.Name;
+            var (assemblyName, className, methodName) = _delegateCache.GetOrAdd(method, key => {
+                return (
+                    method.Method.DeclaringType?.Assembly.GetName().Name ?? string.Empty,
+                    method.Method.DeclaringType?.Name ?? string.Empty,
+                    method.Method.Name
+                );
+            });
 
             var order = _templateOrders
                 .GetOrAdd(template, key => {
