@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace TinyBeans.Logging {
+namespace Microsoft.Extensions.Logging {
 
     /// <summary>
     /// Represents a type used to wrap and enhance method calls with additional logging.
     /// </summary>
-    public interface IAsyncLoggingAspect {
+    /// <typeparam name="T">The type of <see cref="ILogger{T}"/> logs will be written to.</typeparam>
+    public interface IAsyncLoggingAspect<T> {
+
+        /// <summary>
+        /// The logger used when writing additional logs.
+        /// </summary>
+        ILogger<T> Logger { get; }
 
         /// <summary>
         /// Invokes the supplied method with additional logging.
@@ -33,7 +39,7 @@ namespace TinyBeans.Logging {
         /// <param name="parameter1">The first parameter to pass to the method.</param>
         /// <param name="parameter2">The second parameter to pass to the method.</param>
         /// <returns>An awaitable <see cref="Task"/>.</returns>
-        Task InvokeAsync<P1, P2>(Action<P1, P2, Task> method, P1 parameter1, P2 parameter2);
+        Task InvokeAsync<P1, P2>(Func<P1, P2, Task> method, P1 parameter1, P2 parameter2);
 
         /// <summary>
         /// Invokes the supplied method with additional logging.
@@ -46,7 +52,7 @@ namespace TinyBeans.Logging {
         /// <param name="parameter2">The second parameter to pass to the method.</param>
         /// <param name="parameter3">The third parameter to pass to the method.</param>
         /// <returns>An awaitable <see cref="Task"/>.</returns>
-        Task InvokeAsync<P1, P2, P3>(Action<P1, P2, P3, Task> method, P1 parameter1, P2 parameter2, P3 parameter3);
+        Task InvokeAsync<P1, P2, P3>(Func<P1, P2, P3, Task> method, P1 parameter1, P2 parameter2, P3 parameter3);
 
         /// <summary>
         /// Invokes the supplied method with additional logging.
@@ -61,7 +67,7 @@ namespace TinyBeans.Logging {
         /// <param name="parameter3">The third parameter to pass to the method.</param>
         /// <param name="parameter4">The fourth parameter to pass to the method.</param>
         /// <returns>An awaitable <see cref="Task"/>.</returns>
-        Task InvokeAsync<P1, P2, P3, P4>(Action<P1, P2, P3, P4, Task> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4);
+        Task InvokeAsync<P1, P2, P3, P4>(Func<P1, P2, P3, P4, Task> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4);
 
         /// <summary>
         /// Invokes the supplied method with additional logging.
@@ -78,7 +84,7 @@ namespace TinyBeans.Logging {
         /// <param name="parameter4">The fourth parameter to pass to the method.</param>
         /// <param name="parameter5">The fifth parameter to pass to the method.</param>
         /// <returns>An awaitable <see cref="Task"/>.</returns>
-        Task InvokeAsync<P1, P2, P3, P4, P5>(Action<P1, P2, P3, P4, P5, Task> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4, P5 parameter5);
+        Task InvokeAsync<P1, P2, P3, P4, P5>(Func<P1, P2, P3, P4, P5, Task> method, P1 parameter1, P2 parameter2, P3 parameter3, P4 parameter4, P5 parameter5);
 
         /// <summary>
         /// Invokes the supplied method with additional logging.
