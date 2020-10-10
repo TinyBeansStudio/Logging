@@ -17,7 +17,7 @@ namespace TinyBeans.Logging.Defaults {
         private readonly IOptionsMonitor<LoggingAspectOptions> _options;
 
         private static ConcurrentDictionary<string, int[]> _templateOrders = new ConcurrentDictionary<string, int[]>();
-        private static ConcurrentDictionary<Delegate, (string assemblyName, string className, string methodName)> _delegateCache = new ConcurrentDictionary<Delegate, (string assemblyName, string className, string methodName)>();
+        private static ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)> _delegateCache = new ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)>();
 
         /// <summary>
         /// The logger used when writing additional logs.
@@ -299,12 +299,20 @@ namespace TinyBeans.Logging.Defaults {
         }
 
         private void LogExecuting(Delegate method) {
+            if (!Logger.IsEnabled(_options.CurrentValue.ExecutionLogLevel)) {
+                return;
+            }
+
             var (name1, name2, name3) = Names(_options.CurrentValue.MethodExecutingTemplate, method);
 
             Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, name1, name2, name3);
         }
 
         private void LogExecuted(Delegate method) {
+            if (!Logger.IsEnabled(_options.CurrentValue.ExecutionLogLevel)) {
+                return;
+            }
+
             var (name1, name2, name3) = Names(_options.CurrentValue.MethodExecutedTemplate, method);
 
             Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, name1, name2, name3);
