@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TinyBeans.Logging.Abstractions;
@@ -584,7 +583,7 @@ namespace TinyBeans.Logging.Defaults {
 
                 Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, name1, name2, name3);
             } finally {
-                scopes?.ForEach(scope => scope.Dispose());
+                scopes?.ForEach(scope => scope?.Dispose());
             }
         }
 

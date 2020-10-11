@@ -20,8 +20,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
         private DefaultLoggingAspect<DefaultLoggingAspectTests> Sut => new DefaultLoggingAspect<DefaultLoggingAspectTests>(_loggerMock.Object, _loggableStateParserMock.Object, _loggingAspectOptionsMock.Object);
 
         public DefaultLoggingAspectTests() {
-            _loggerMock.Setup(x => x.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
-            _loggableStateParserMock.Setup(x => x.ParseLoggableItems(It.IsAny<object>())).Returns(new Dictionary<string, object>());
+            _loggerMock.Setup(x => x.IsEnabled(LogLevel.Trace)).Returns(true);
+            _loggerMock.Setup(x => x.IsEnabled(LogLevel.Debug)).Returns(true);
+            _loggableStateParserMock.Setup(x => x.ParseLoggableItems(It.IsAny<object>())).Returns(new Dictionary<string, object>() { { "Key", "Value" } });
             _loggingAspectOptionsMock.Setup(x => x.CurrentValue).Returns(_loggingAspectOptions);
         }
 
@@ -33,7 +34,7 @@ namespace TinyBeans.Logging.Tests.Defaults {
 
             sut.Invoke(dummy.Method);
 
-            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Once);
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(1));
             _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
@@ -45,7 +46,7 @@ namespace TinyBeans.Logging.Tests.Defaults {
 
             sut.Invoke(dummy.Method, poco);
 
-            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Once);
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(2));
             _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
@@ -56,6 +57,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.Method, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(3));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -65,6 +69,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.Method, poco, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(4));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -74,6 +81,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.Method, poco, poco, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(5));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -83,6 +93,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.Method, poco, poco, poco, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(6));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -92,6 +105,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.ResultMethod);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(2));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -101,6 +117,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.ResultMethod, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(3));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -110,6 +129,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.ResultMethod, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(4));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -119,6 +141,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.ResultMethod, poco, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(5));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -128,6 +153,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.ResultMethod, poco, poco, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(6));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -137,6 +165,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.Invoke(dummy.ResultMethod, poco, poco, poco, poco, poco);
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(7));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -146,6 +177,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.MethodAsync).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(1));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -155,6 +189,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.MethodAsync, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(2));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -164,6 +201,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.MethodAsync, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(3));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -173,6 +213,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.MethodAsync, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(4));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -182,6 +225,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.MethodAsync, poco, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(5));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -191,6 +237,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.MethodAsync, poco, poco, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(6));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -200,6 +249,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.ResultMethodAsync).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(2));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -209,6 +261,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.ResultMethodAsync, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(3));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -218,6 +273,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.ResultMethodAsync, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(4));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -227,6 +285,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.ResultMethodAsync, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(5));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -236,6 +297,9 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.ResultMethodAsync, poco, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(6));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -245,6 +309,37 @@ namespace TinyBeans.Logging.Tests.Defaults {
             var poco = new DummyPocoShouldLog();
 
             sut.InvokeAsync(dummy.ResultMethodAsync, poco, poco, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(7));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void DoesNotExecuteStateScopesWhenTraceFalse() {
+            _loggerMock.Setup(x => x.IsEnabled(LogLevel.Trace)).Returns(false);
+
+            var sut = Sut;
+            var dummy = new DummyClass();
+            var poco = new DummyPocoShouldLog();
+
+            sut.InvokeAsync(dummy.ResultMethodAsync, poco, poco, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(1));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void DoesNotExecuteLogsWhenDebugFalse() {
+            _loggerMock.Setup(x => x.IsEnabled(LogLevel.Debug)).Returns(false);
+
+            var sut = Sut;
+            var dummy = new DummyClass();
+            var poco = new DummyPocoShouldLog();
+
+            sut.InvokeAsync(dummy.ResultMethodAsync, poco, poco, poco, poco, poco).Wait();
+
+            _loggerMock.Verify(x => x.BeginScope(It.IsAny<It.IsAnyType>()), Times.Exactly(1));
+            _loggerMock.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Exactly(0));
         }
     }
 }
