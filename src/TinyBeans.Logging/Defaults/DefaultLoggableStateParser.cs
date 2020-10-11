@@ -13,6 +13,7 @@ namespace TinyBeans.Logging.Defaults {
     /// </summary>
     public class DefaultLoggableStateParser : ILoggableStateParser {
         private static readonly ConcurrentDictionary<Type, (PropertyInfo property, SensitiveAttribute? sensitive)[]> _typeCache = new ConcurrentDictionary<Type, (PropertyInfo property, SensitiveAttribute? sensitive)[]>();
+        private static readonly Dictionary<string, object> _emptyDictionary = new Dictionary<string, object>();
 
         /// <summary>
         /// Used to parse the loggable items from a state object.
@@ -21,7 +22,11 @@ namespace TinyBeans.Logging.Defaults {
         /// <param name="state">The object to parse the loggable items from.</param>
         /// <returns>A dictionary containing the parsed loggable items.</returns>
         public Dictionary<string, object> ParseLoggableItems<TState>(TState state) {
-            var type = typeof(TState);
+            if (state is null) {
+                return _emptyDictionary;
+            }
+
+            var type = state.GetType();
 
             var items = _typeCache
                 .GetOrAdd(type, key => {
@@ -30,27 +35,33 @@ namespace TinyBeans.Logging.Defaults {
                         return Array.Empty<(PropertyInfo property, SensitiveAttribute? sensitive)>();
                     }
 
-                    return key.GetTypeInfo().GetProperties().Select(x => (x, (SensitiveAttribute?)x.GetCustomAttribute<SensitiveAttribute>(false))).ToArray();
+                    return key.GetTypeInfo().GetProperties().Select(x => (x, (SensitiveAttribute?)x.GetCustomAttribute<SensitiveAttribute>(true))).ToArray();
                 });
 
-            return items
-                .ToDictionary(x => $"{type.Name}.{x.property.Name}", x => {
-                    if (x.sensitive is null) {
-                        return x.property.GetValue(state);
-                    }
+            if (items.Count() == 0) {
+                return _emptyDictionary;
+            }
 
-                    if (x.sensitive.ReplacementValue is object) {
-                        return x.sensitive.ReplacementValue;
-                    }
+            var loggables = new Dictionary<string, object>(items.Count());
 
-                    if (x.property.PropertyType.IsValueType) {
-                        return Activator.CreateInstance(x.property.PropertyType);
-                    }
+            foreach (var item in items) {
+                object value;
+                if (item.sensitive is null) {
+                    value = item.property.GetValue(state);
+                } else if (item.sensitive.ReplacementValue is object) {
+                    value = item.sensitive.ReplacementValue;
+                } else if (item.property.PropertyType.IsValueType) {
+                    value = Activator.CreateInstance(item.property.PropertyType);
+                } else {
+                    value = null!;
+                }
 
-                    return null;
-                })
-                .Where(x => x.Value is object)
-                .ToDictionary(x => x.Key, x => x.Value!);
+                if (value is object) {
+                    loggables.Add($"{type.Name}_{item.property.Name}", value);
+                }
+            }
+
+            return loggables;
         }
     }
 }

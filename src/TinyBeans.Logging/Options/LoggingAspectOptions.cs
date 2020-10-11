@@ -3,7 +3,7 @@
 namespace TinyBeans.Logging.Options {
 
     /// <summary>
-    /// Options used by the <see cref="IAsyncLoggingAspect{T}"/>.
+    /// Options used by the <see cref="ILoggingAspect{T}"/>.
     /// </summary>
     public class LoggingAspectOptions {
 
@@ -23,6 +23,11 @@ namespace TinyBeans.Logging.Options {
         /// The log level to write out executing and executed logs.
         /// </summary>
         public LogLevel ExecutionLogLevel { get; set; } = LogLevel.Debug;
+
+        /// <summary>
+        /// The log level to write out state items as scopes.
+        /// </summary>
+        public LogLevel StateItemsLogLevel { get; set; } = LogLevel.Trace;
 
         /// <summary>
         /// The message template to use for scopes.
