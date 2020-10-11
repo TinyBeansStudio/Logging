@@ -1,2 +1,2 @@
-# LoggingAspect
-A non-magical logging aspect to help improve application logs.
+# TinyBeans.Logging
+The intended use of TinyBeans.Logging is to help improve logging without cluttering application logic or using magical components.
