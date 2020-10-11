@@ -1,11 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Nullable>enable</Nullable>
+		<LangVersion>8.0</LangVersion>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<Authors>Jeffrey Rutt</Authors>
+		<Company>Tiny Beans, LLC</Company>
+		<Description>TinyBeans.Logging.Abstractions contains the common interfaces for TinyBeans.Logging.</Description>
+		<PackageProjectUrl>https://github.com/TinyBeansStudio/Logging.Abstractions</PackageProjectUrl>
+		<PackageTags>Logging</PackageTags>
+		<Version>1.0.0</Version>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8"/>
+	</ItemGroup>
 </Project>

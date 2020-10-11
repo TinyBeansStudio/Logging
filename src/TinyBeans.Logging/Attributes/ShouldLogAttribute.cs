@@ -6,7 +6,7 @@ namespace TinyBeans.Logging.Attributes {
     /// <summary>
     /// Attribute to indicate an <see cref="IAsyncLoggingAspect{T}"/> parameter or result should be logged.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ShouldLogAttribute : Attribute {
 
         /// <summary>

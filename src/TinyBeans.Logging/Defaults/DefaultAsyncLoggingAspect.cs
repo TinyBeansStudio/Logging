@@ -16,8 +16,8 @@ namespace TinyBeans.Logging.Defaults {
     public class DefaultAsyncLoggingAspect<T> : IAsyncLoggingAspect<T> {
         private readonly IOptionsMonitor<LoggingAspectOptions> _options;
 
-        private static ConcurrentDictionary<string, int[]> _templateOrders = new ConcurrentDictionary<string, int[]>();
-        private static ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)> _delegateCache = new ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)>();
+        private static readonly ConcurrentDictionary<string, int[]> _templateOrders = new ConcurrentDictionary<string, int[]>();
+        private static readonly ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)> _delegateCache = new ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)>();
 
         /// <summary>
         /// The logger used when writing additional logs.
