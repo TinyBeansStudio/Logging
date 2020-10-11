@@ -8,10 +8,9 @@ namespace TinyBeans.Logging.Options {
     public class LoggingAspectOptions {
 
         /// <summary>
-        /// The message template to use when executing a method.
-        /// Available template values are: '{AssemblyName}', '{ClassName}', and '{MethodName}'
+        /// The log level to write out executing and executed logs.
         /// </summary>
-        public string MethodExecutingTemplate { get; set; } = "Executing method {MethodName} on class {ClassName} in assembly {AssemblyName}.";
+        public LogLevel ExecutionLogLevel { get; set; } = LogLevel.Debug;
 
         /// <summary>
         /// The message template to use when a method has executed.
@@ -20,19 +19,20 @@ namespace TinyBeans.Logging.Options {
         public string MethodExecutedTemplate { get; set; } = "Executed method {MethodName} on class {ClassName} in assembly {AssemblyName}.";
 
         /// <summary>
-        /// The log level to write out executing and executed logs.
+        /// The message template to use when executing a method.
+        /// Available template values are: '{AssemblyName}', '{ClassName}', and '{MethodName}'
         /// </summary>
-        public LogLevel ExecutionLogLevel { get; set; } = LogLevel.Debug;
-
-        /// <summary>
-        /// The log level to write out state items as scopes.
-        /// </summary>
-        public LogLevel StateItemsLogLevel { get; set; } = LogLevel.Trace;
+        public string MethodExecutingTemplate { get; set; } = "Executing method {MethodName} on class {ClassName} in assembly {AssemblyName}.";
 
         /// <summary>
         /// The message template to use for scopes.
         /// Available template values are: '{AssemblyName}', '{ClassName}', and '{MethodName}'
         /// </summary>
         public string ScopeTemplate { get; set; } = "{ClassName}.{MethodName} ({AssemblyName})";
+
+        /// <summary>
+        /// The log level to write out state items as scopes.
+        /// </summary>
+        public LogLevel StateItemsLogLevel { get; set; } = LogLevel.Trace;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace TinyBeans.Logging.Tests.Dummy {
     [ShouldLog]
-    public class DummyPocoShouldLogSensitive {
+    internal class DummyPocoShouldLogSensitive {
         public string Property1 { get; set; }
 
         [Sensitive]
