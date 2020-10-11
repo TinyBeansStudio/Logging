@@ -21,10 +21,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8"/>
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8"/>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\TinyBeans.Logging.Abstractions\TinyBeans.Logging.Abstractions.csproj"/>
+		<PackageReference Include="TinyBeans.Logging.Abstractions" Version="1.0.0"/>
 	</ItemGroup>
 
 	<ItemGroup>
