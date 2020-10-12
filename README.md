@@ -38,7 +38,7 @@ public class Startup {
 ```
 
   
-Second, replace your current ILogger<T> dependency with ILoggingAspect<T>.
+Second, replace your current ILogger<T> dependency with ILoggingAspect<T>.  Don't worry, there is an ILogger<T> property on the ILoggingAspect<T> interface so you will not need another dependency for additional logging.
 ```cs
 [Route("/sample")]
 public class SampleController : ControllerBase {
