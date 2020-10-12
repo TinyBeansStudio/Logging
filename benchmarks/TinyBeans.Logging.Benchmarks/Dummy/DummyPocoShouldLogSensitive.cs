@@ -1,7 +1,7 @@
 ﻿using TinyBeans.Logging.Attributes;
 
 namespace TinyBeans.Logging.Benchmarks.Dummy {
-    [ShouldLog]
+    [Loggable]
     public class DummyPocoShouldLogSensitive {
         public string Property1 { get; set; }
 

@@ -15,7 +15,7 @@ namespace TinyBeans.Logging.Defaults {
     /// </summary>
     /// <typeparam name="T">The type of <see cref="ILogger{T}"/> logs will be written to.</typeparam>
     public class DefaultLoggingAspect<T> : ILoggingAspect<T> {
-        private readonly ILoggableStateParser _loggableStateParser;
+        private readonly ILoggableParser _loggableParser;
         private readonly IOptionsMonitor<LoggingAspectOptions> _options;
 
         private static readonly ConcurrentDictionary<string, int[]> _templateOrders = new ConcurrentDictionary<string, int[]>();
@@ -30,11 +30,11 @@ namespace TinyBeans.Logging.Defaults {
         /// Constructor
         /// </summary>
         /// <param name="logger">The logger used when writing additional logs.</param>
-        /// <param name="loggableStateParser">The state parser to use when logging parameters and results.</param>
+        /// <param name="loggableParser">The state parser to use when logging parameters and results.</param>
         /// <param name="options">The <see cref="LoggingAspectOptions"/> to use.</param>
-        public DefaultLoggingAspect(ILogger<T> logger, ILoggableStateParser loggableStateParser, IOptionsMonitor<LoggingAspectOptions> options) {
+        public DefaultLoggingAspect(ILogger<T> logger, ILoggableParser loggableParser, IOptionsMonitor<LoggingAspectOptions> options) {
             Logger = logger;
-            _loggableStateParser = loggableStateParser;
+            _loggableParser = loggableParser;
             _options = options;
         }
 
@@ -571,7 +571,7 @@ namespace TinyBeans.Logging.Defaults {
                     scopes = new List<IDisposable>(5);
 
                     foreach (var parameter in parameters.Reverse().Where(p => p is object)) {
-                        var items = _loggableStateParser.ParseLoggableItems(parameter);
+                        var items = _loggableParser.ParseLoggable(parameter);
 
                         if (items.Count > 0) {
                             scopes.Add(Logger.BeginScope(items));
@@ -596,7 +596,7 @@ namespace TinyBeans.Logging.Defaults {
             IDisposable scope = null!;
             try {
                 if (Logger.IsEnabled(_options.CurrentValue.StateItemsLogLevel) && result is object) {
-                    var items = _loggableStateParser.ParseLoggableItems(result);
+                    var items = _loggableParser.ParseLoggable(result);
 
                     if (items.Count > 0) {
                         scope = Logger.BeginScope(items);

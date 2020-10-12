@@ -9,19 +9,19 @@ using TinyBeans.Logging.Attributes;
 namespace TinyBeans.Logging.Defaults {
 
     /// <summary>
-    /// The default implementatin of <see cref="ILoggableStateParser"/>.
+    /// The default implementation of <see cref="ILoggableParser"/>.
     /// </summary>
-    public class DefaultLoggableStateParser : ILoggableStateParser {
+    public class DefaultLoggableParser : ILoggableParser {
         private static readonly ConcurrentDictionary<Type, (PropertyInfo property, SensitiveAttribute? sensitive)[]> _typeCache = new ConcurrentDictionary<Type, (PropertyInfo property, SensitiveAttribute? sensitive)[]>();
         private static readonly Dictionary<string, object> _emptyDictionary = new Dictionary<string, object>();
 
         /// <summary>
-        /// Used to parse the loggable items from a state object.
+        /// Used to parse loggable items from a state object.
         /// </summary>
-        /// <typeparam name="TState">The type of object to parse the loggable items from.</typeparam>
-        /// <param name="state">The object to parse the loggable items from.</param>
+        /// <typeparam name="TState">The type of object to parse the loggable items.</typeparam>
+        /// <param name="state">The object to parse the loggable items.</param>
         /// <returns>A dictionary containing the parsed loggable items.</returns>
-        public Dictionary<string, object> ParseLoggableItems<TState>(TState state) {
+        public Dictionary<string, object> ParseLoggable<TState>(TState state) {
             if (state is null) {
                 return _emptyDictionary;
             }
@@ -30,7 +30,7 @@ namespace TinyBeans.Logging.Defaults {
 
             var items = _typeCache
                 .GetOrAdd(type, key => {
-                    var shouldLogAttribute = key.GetTypeInfo().GetCustomAttribute<ShouldLogAttribute>(false);
+                    var shouldLogAttribute = key.GetTypeInfo().GetCustomAttribute<LoggableAttribute>(false);
                     if (shouldLogAttribute is null) {
                         return Array.Empty<(PropertyInfo property, SensitiveAttribute? sensitive)>();
                     }
@@ -50,8 +50,6 @@ namespace TinyBeans.Logging.Defaults {
                     value = item.property.GetValue(state);
                 } else if (item.sensitive.ReplacementValue is object) {
                     value = item.sensitive.ReplacementValue;
-                } else if (item.property.PropertyType.IsValueType) {
-                    value = Activator.CreateInstance(item.property.PropertyType);
                 } else {
                     value = null!;
                 }

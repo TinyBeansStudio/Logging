@@ -12,17 +12,17 @@ using Xunit;
 namespace TinyBeans.Logging.Tests.Defaults {
     public class DefaultLoggingAspectTests {
         private readonly Mock<ILogger<DefaultLoggingAspectTests>> _loggerMock = new Mock<ILogger<DefaultLoggingAspectTests>>();
-        private readonly Mock<ILoggableStateParser> _loggableStateParserMock = new Mock<ILoggableStateParser>();
+        private readonly Mock<ILoggableParser> _loggableParserMock = new Mock<ILoggableParser>();
         private readonly Mock<IOptionsMonitor<LoggingAspectOptions>> _loggingAspectOptionsMock = new Mock<IOptionsMonitor<LoggingAspectOptions>>();
 
         private readonly LoggingAspectOptions _loggingAspectOptions = new LoggingAspectOptions();
 
-        private DefaultLoggingAspect<DefaultLoggingAspectTests> Sut => new DefaultLoggingAspect<DefaultLoggingAspectTests>(_loggerMock.Object, _loggableStateParserMock.Object, _loggingAspectOptionsMock.Object);
+        private DefaultLoggingAspect<DefaultLoggingAspectTests> Sut => new DefaultLoggingAspect<DefaultLoggingAspectTests>(_loggerMock.Object, _loggableParserMock.Object, _loggingAspectOptionsMock.Object);
 
         public DefaultLoggingAspectTests() {
             _loggerMock.Setup(x => x.IsEnabled(LogLevel.Trace)).Returns(true);
             _loggerMock.Setup(x => x.IsEnabled(LogLevel.Debug)).Returns(true);
-            _loggableStateParserMock.Setup(x => x.ParseLoggableItems(It.IsAny<object>())).Returns(new Dictionary<string, object>() { { "Key", "Value" } });
+            _loggableParserMock.Setup(x => x.ParseLoggable(It.IsAny<object>())).Returns(new Dictionary<string, object>() { { "Key", "Value" } });
             _loggingAspectOptionsMock.Setup(x => x.CurrentValue).Returns(_loggingAspectOptions);
         }
 

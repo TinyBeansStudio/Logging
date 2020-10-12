@@ -1,7 +1,7 @@
 ﻿using TinyBeans.Logging.Attributes;
 
 namespace TinyBeans.Logging.Tests.Dummy {
-    [ShouldLog]
+    [Loggable]
     internal class DummyPocoShouldLog : DummyPoco {
     }
 }

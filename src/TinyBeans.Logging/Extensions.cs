@@ -11,7 +11,7 @@ namespace TinyBeans.Logging {
     /// <summary>
     /// Extensions for <see cref="Logging"/>.
     /// </summary>
-    public static class LoggingAspectExtensions {
+    public static class Extensions {
 
         /// <summary>
         /// Adds services required for using <see cref="ILoggingAspect{T}"/> using the default options.
@@ -20,7 +20,7 @@ namespace TinyBeans.Logging {
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
         public static IServiceCollection AddLoggingAspect(this IServiceCollection services) {
             return services
-                .AddSingleton<ILoggableStateParser, DefaultLoggableStateParser>()
+                .AddSingleton<ILoggableParser, DefaultLoggableParser>()
                 .AddSingleton(typeof(ILoggingAspect<>), typeof(DefaultLoggingAspect<>));
         }
 
@@ -32,7 +32,7 @@ namespace TinyBeans.Logging {
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
         public static IServiceCollection AddLoggingAspect(this IServiceCollection services, Action<LoggingAspectOptions> options) {
             return services
-                .AddSingleton<ILoggableStateParser, DefaultLoggableStateParser>()
+                .AddSingleton<ILoggableParser, DefaultLoggableParser>()
                 .AddSingleton(typeof(ILoggingAspect<>), typeof(DefaultLoggingAspect<>))
                 .Configure<LoggingAspectOptions>(options);
         }
@@ -45,7 +45,7 @@ namespace TinyBeans.Logging {
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
         public static IServiceCollection AddLoggingAspect(this IServiceCollection services, IConfigurationSection configurationSection) {
             return services
-                .AddSingleton<ILoggableStateParser, DefaultLoggableStateParser>()
+                .AddSingleton<ILoggableParser, DefaultLoggableParser>()
                 .AddSingleton(typeof(ILoggingAspect<>), typeof(DefaultLoggingAspect<>))
                 .Configure<LoggingAspectOptions>(configurationSection);
         }
