@@ -1,5 +1,8 @@
 # TinyBeans.Logging
-The intended use of TinyBeans.Logging is to help improve logging without cluttering application logic or using magical components.  The primary component is the ILoggingAspect&lt;T&gt; interface.  Though technically not an aspect since it does require manually calling, it still takes care of logging concerns when calling methods.  Using the ILoggingAspect&lt;T&gt; interface is straight forward.
+The purpose TinyBeans.Logging is to help improve logging without cluttering application logic or using magical components.
+
+## Logging Aspect
+The primary component is the ILoggingAspect&lt;T&gt; interface.  Though technically not an aspect since it does require manually calling, it still takes care of logging concerns when calling methods.  Using the ILoggingAspect&lt;T&gt; interface is straight forward.
   
 First, add the ILoggingAspect&lt;T&gt; to your IServiceCollection in one of three ways.  Using defaults, supplying the options, or supplying the configuration.
 ```cs
@@ -61,7 +64,6 @@ var product = await _loggingAspect.InvokeAsync(_sampleManager.SampleMethod, crit
 And with that, pending your log levels allow for it, your application will now log when a method is executing and has executed, along with adding a scope indicating the method you are in.
 
 ## But wait, there's more!
-
 The ILoggingAspect&lt;T&gt; also uses an ILoggableParser which, if your method parameters and results are decorated with the LoggableAttribute, will add a Dictionary&lt;string, object&gt; scope of all the properties when logging method executing and executed.  If the LoggableAttribute is supplied on the class, you can omit properties with the SensitiveAttribute.  If the SensitiveAttribute is supplied without a replacement value, the property will be omitted.  If a replacement value is specified, it will replace the value when added to the Dictionary&lt;string, object&gt; scope.
 ```cs
 [Loggable]
@@ -76,3 +78,6 @@ public class SampleCriteria {
     public string Password { get; set; }
 }
 ```
+
+## Note
+The intended use of this component is to aid in solving runtime issues by supplying information in the form of log properties.  It is not intended for logging large object graphs.
