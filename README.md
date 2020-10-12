@@ -1,5 +1,5 @@
 # TinyBeans.Logging
-The intended use of TinyBeans.Logging is to help improve logging without cluttering application logic or using magical components.  The primary component is the ILoggingAspect<T> interface.  Though technically not an aspect since it does require manually calling it, it still takes care of logging concerns when calling methods.  Using the ILoggingAspect<T> interface is straight forward.
+The intended use of TinyBeans.Logging is to help improve logging without cluttering application logic or using magical components.  The primary component is the ILoggingAspect<T> interface.  Though technically not an aspect since it does require manually calling, it still takes care of logging concerns when calling methods.  Using the ILoggingAspect<T> interface is straight forward.
   
 First, add the ILoggingAspect<T> to your IServiceCollection in one of three ways.  Using defaults, supplying the options, or supplying the configuration.
 ```cs
