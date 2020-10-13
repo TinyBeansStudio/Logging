@@ -5,6 +5,7 @@ namespace TinyBeans.Logging.Attributes {
     /// <summary>
     /// Attribute to indicate the property is sensitive.
     /// </summary>
+    [Obsolete("Replaced with OmitAttribute and ReplaceAttribute", true)]
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public class SensitiveAttribute : Attribute {
 

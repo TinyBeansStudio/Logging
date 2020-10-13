@@ -16,7 +16,7 @@ namespace TinyBeans.Logging.Mvc.Filters {
     /// Mvc filter used to wrap and enhance controller calls with additional logging.
     /// </summary>
     public class LoggingFilter : IAsyncActionFilter {
-        private readonly IOptionsMonitor<LoggingAspectOptions> _options;
+        private readonly IOptionsMonitor<LoggingOptions> _options;
         private readonly ILogger<LoggingFilter> _logger;
         private readonly ILoggableParser _loggableParser;
 
@@ -25,10 +25,10 @@ namespace TinyBeans.Logging.Mvc.Filters {
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="options">The <see cref="LoggingAspectOptions"/> to use.</param>
+        /// <param name="options">The <see cref="LoggingOptions"/> to use.</param>
         /// <param name="logger">The logger used when writing additional logs.</param>
         /// <param name="loggableParser">The state parser to use when logging parameters and results.</param>
-        public LoggingFilter(IOptionsMonitor<LoggingAspectOptions> options, ILogger<LoggingFilter> logger, ILoggableParser loggableParser) {
+        public LoggingFilter(IOptionsMonitor<LoggingOptions> options, ILogger<LoggingFilter> logger, ILoggableParser loggableParser) {
             _options = options;
             _logger = logger;
             _loggableParser = loggableParser;

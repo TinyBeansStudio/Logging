@@ -16,7 +16,7 @@ namespace TinyBeans.Logging.Defaults {
     /// <typeparam name="T">The type of <see cref="ILogger{T}"/> logs will be written to.</typeparam>
     public class DefaultLoggingAspect<T> : ILoggingAspect<T> {
         private readonly ILoggableParser _loggableParser;
-        private readonly IOptionsMonitor<LoggingAspectOptions> _options;
+        private readonly IOptionsMonitor<LoggingOptions> _options;
 
         private static readonly ConcurrentDictionary<Delegate, string[]> _delegateCache = new ConcurrentDictionary<Delegate, string[]>();
 
@@ -30,8 +30,8 @@ namespace TinyBeans.Logging.Defaults {
         /// </summary>
         /// <param name="logger">The logger used when writing additional logs.</param>
         /// <param name="loggableParser">The state parser to use when logging parameters and results.</param>
-        /// <param name="options">The <see cref="LoggingAspectOptions"/> to use.</param>
-        public DefaultLoggingAspect(ILogger<T> logger, ILoggableParser loggableParser, IOptionsMonitor<LoggingAspectOptions> options) {
+        /// <param name="options">The <see cref="LoggingOptions"/> to use.</param>
+        public DefaultLoggingAspect(ILogger<T> logger, ILoggableParser loggableParser, IOptionsMonitor<LoggingOptions> options) {
             Logger = logger;
             _loggableParser = loggableParser;
             _options = options;

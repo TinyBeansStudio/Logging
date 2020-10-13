@@ -5,7 +5,7 @@ namespace TinyBeans.Logging.Benchmarks {
 
     [SimpleJob]
     public class TemplateBenchmarks {
-        private readonly LoggingAspectOptions _options = new LoggingAspectOptions();
+        private readonly LoggingOptions _options = new LoggingOptions();
 
         [Benchmark]
         public void OrderNames() {

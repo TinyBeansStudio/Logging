@@ -1,13 +1,11 @@
-﻿using System;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace TinyBeans.Logging.Options {
 
     /// <summary>
     /// Options used by the <see cref="ILoggingAspect{T}"/>.
     /// </summary>
-    [Obsolete("Replaced with LoggingOptions", true)]
-    public class LoggingAspectOptions {
+    public class LoggingOptions {
 
         /// <summary>
         /// The log level to write out executing and executed logs.

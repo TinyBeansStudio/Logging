@@ -5,10 +5,10 @@ namespace TinyBeans.Logging.Benchmarks.Dummy {
     public class DummyPocoShouldLogSensitive {
         public string Property1 { get; set; }
 
-        [Sensitive]
+        [Omit]
         public string Property2 { get; set; }
 
-        [Sensitive(ReplacementValue = "SENSITIVE")]
+        [Replace("SENSITIVE")]
         public string Property3 { get; set; }
     }
 }
