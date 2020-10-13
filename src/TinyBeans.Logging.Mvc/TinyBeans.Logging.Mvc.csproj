@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -9,28 +9,19 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<Authors>Jeffrey Rutt</Authors>
 		<Company>Tiny Beans, LLC</Company>
-		<Description>TinyBeans.Logging contains objects to assist in better application logging without cluttering your code.</Description>
+		<Description>TinyBeans.Logging.Mvc contains components for Mvc applications, including Apis.</Description>
 		<PackageProjectUrl>https://github.com/TinyBeansStudio/Logging</PackageProjectUrl>
 		<PackageTags>Logging</PackageTags>
 		<Version>1.0.1</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>© 2020 Tiny Beans, LLC</Copyright>
-		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\..\icon.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\TinyBeans.Logging.Abstractions\TinyBeans.Logging.Abstractions.csproj" />
+	  <ProjectReference Include="..\TinyBeans.Logging\TinyBeans.Logging.csproj" />
 	</ItemGroup>
 </Project>

@@ -18,8 +18,7 @@ namespace TinyBeans.Logging.Defaults {
         private readonly ILoggableParser _loggableParser;
         private readonly IOptionsMonitor<LoggingAspectOptions> _options;
 
-        private static readonly ConcurrentDictionary<string, int[]> _templateOrders = new ConcurrentDictionary<string, int[]>();
-        private static readonly ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)> _delegateCache = new ConcurrentDictionary<Delegate, (string AssemblyName, string ClassName, string MethodName)>();
+        private static readonly ConcurrentDictionary<Delegate, string[]> _delegateCache = new ConcurrentDictionary<Delegate, string[]>();
 
         /// <summary>
         /// The logger used when writing additional logs.
@@ -567,21 +566,21 @@ namespace TinyBeans.Logging.Defaults {
 
             List<IDisposable> scopes = null!;
             try {
-                if (Logger.IsEnabled(_options.CurrentValue.StateItemsLogLevel)) {
-                    scopes = new List<IDisposable>(5);
+                if (parameters.Length > 0 && Logger.IsEnabled(_options.CurrentValue.StateItemsLogLevel)) {
+                    scopes = new List<IDisposable>(parameters.Length);
 
                     foreach (var parameter in parameters.Reverse().Where(p => p is object)) {
                         var items = _loggableParser.ParseLoggable(parameter);
 
-                        if (items.Count > 0) {
+                        if (items.Count() > 0) {
                             scopes.Add(Logger.BeginScope(items));
                         }
                     }
                 }
 
-                var (name1, name2, name3) = Names(_options.CurrentValue.MethodExecutingTemplate, method);
+                var names = Names(_options.CurrentValue.MethodExecutingTemplate, method);
 
-                Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, name1, name2, name3);
+                Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, names[0], names[1], names[2]);
             } finally {
                 scopes?.ForEach(scope => scope?.Dispose());
             }
@@ -598,77 +597,35 @@ namespace TinyBeans.Logging.Defaults {
                 if (Logger.IsEnabled(_options.CurrentValue.StateItemsLogLevel) && result is object) {
                     var items = _loggableParser.ParseLoggable(result);
 
-                    if (items.Count > 0) {
+                    if (items.Count() > 0) {
                         scope = Logger.BeginScope(items);
                     }
                 }
 
-                var (name1, name2, name3) = Names(_options.CurrentValue.MethodExecutedTemplate, method);
+                var names = Names(_options.CurrentValue.MethodExecutedTemplate, method);
 
-                Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, name1, name2, name3);
+                Logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutedTemplate, names[0], names[1], names[2]);
             } finally {
                 scope?.Dispose();
             }
         }
 
         private IDisposable GetScope(Delegate method) {
-            var (name1, name2, name3) = Names(_options.CurrentValue.ScopeTemplate, method);
+            var names = Names(_options.CurrentValue.ScopeTemplate, method);
 
-            return Logger.BeginScope(_options.CurrentValue.ScopeTemplate, name1, name2, name3);
+            return Logger.BeginScope(_options.CurrentValue.ScopeTemplate, names[0], names[1], names[2]);
         }
 
-        private (string Name1, string Name2, string Name3) Names(string template, Delegate method) {
-            var (assemblyName, className, methodName) = _delegateCache.GetOrAdd(method, key => {
-                return (
+        private string[] Names(string template, Delegate method) {
+            var names = _delegateCache.GetOrAdd(method, key => {
+                return new string[] {
                     method.Method.DeclaringType?.Assembly.GetName().Name ?? string.Empty,
                     method.Method.DeclaringType?.Name ?? string.Empty,
                     method.Method.Name
-                );
+                };
             });
 
-            var order = _templateOrders
-                .GetOrAdd(template, key => {
-                    return new int[3] {
-                        key.IndexOf(Constants.AssemblyField, StringComparison.OrdinalIgnoreCase),
-                        key.IndexOf(Constants.ClassField, StringComparison.OrdinalIgnoreCase),
-                        key.IndexOf(Constants.MethodField, StringComparison.OrdinalIgnoreCase)
-                    };
-                });
-
-            var names = new string[3];
-            if (order[0] < order[1] && order[0] < order[2]) {
-                names[0] = assemblyName;
-
-                if (order[1] < order[2]) {
-                    names[1] = className;
-                    names[2] = methodName;
-                } else {
-                    names[1] = methodName;
-                    names[2] = className;
-                }
-            } else if (order[1] < order[0] && order[1] < order[2]) {
-                names[0] = className;
-
-                if (order[0] < order[2]) {
-                    names[1] = assemblyName;
-                    names[2] = methodName;
-                } else {
-                    names[1] = methodName;
-                    names[2] = assemblyName;
-                }
-            } else {
-                names[0] = methodName;
-
-                if (order[0] < order[1]) {
-                    names[1] = assemblyName;
-                    names[2] = className;
-                } else {
-                    names[1] = className;
-                    names[2] = assemblyName;
-                }
-            }
-
-            return (names[0], names[1], names[2]);
+            return Template.OrderNames(template, names[0], names[1], names[2]);
         }
     }
 }
