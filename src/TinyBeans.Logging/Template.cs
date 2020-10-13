@@ -35,10 +35,11 @@ namespace TinyBeans.Logging {
         public static string[] OrderNames(string template, string assemblyName, string className, string methodName) {
             var order = _templateOrders
                 .GetOrAdd(template, key => {
+                    var span = key.AsSpan();
                     return new int[3] {
-                        key.IndexOf(AssemblyName, StringComparison.OrdinalIgnoreCase),
-                        key.IndexOf(ClassName, StringComparison.OrdinalIgnoreCase),
-                        key.IndexOf(MethodName, StringComparison.OrdinalIgnoreCase)
+                        span.IndexOf(AssemblyName.AsSpan()),
+                        span.IndexOf(ClassName.AsSpan()),
+                        span.IndexOf(MethodName.AsSpan())
                     };
                 });
 
@@ -79,3 +80,10 @@ namespace TinyBeans.Logging {
         }
     }
 }
+
+/*
+Baseline
+|     Method |     Mean |   Error |  StdDev |
+|----------- |---------:|--------:|--------:|
+| OrderNames | 221.7 ns | 4.36 ns | 5.36 ns |
+*/
