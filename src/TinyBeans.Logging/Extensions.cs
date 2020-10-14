@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TinyBeans.Logging.Abstractions;
 using TinyBeans.Logging.Defaults;
 using TinyBeans.Logging.Options;
 
@@ -18,10 +17,12 @@ namespace TinyBeans.Logging {
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-        public static IServiceCollection AddLoggingAspect(this IServiceCollection services) {
+        public static IServiceCollection AddTinyLogging(this IServiceCollection services) {
             return services
                 .AddSingleton<ILoggableParser, DefaultLoggableParser>()
-                .AddSingleton(typeof(ILoggingAspect<>), typeof(DefaultLoggingAspect<>));
+                .AddSingleton(typeof(ILoggingAspect<>), typeof(DefaultLoggingAspect<>))
+                .AddSingleton<ILoggingTemplateHelper, DefaultLoggingTemplateHelper>()
+                .Configure<LoggingOptions>(options => { });
         }
 
         /// <summary>
@@ -30,24 +31,26 @@ namespace TinyBeans.Logging {
         /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <param name="options">The options type to be configured.</param>
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-        public static IServiceCollection AddLoggingAspect(this IServiceCollection services, Action<LoggingAspectOptions> options) {
+        public static IServiceCollection AddTinyLogging(this IServiceCollection services, Action<LoggingOptions> options) {
             return services
                 .AddSingleton<ILoggableParser, DefaultLoggableParser>()
                 .AddSingleton(typeof(ILoggingAspect<>), typeof(DefaultLoggingAspect<>))
-                .Configure<LoggingAspectOptions>(options);
+                .AddSingleton<ILoggingTemplateHelper, DefaultLoggingTemplateHelper>()
+                .Configure<LoggingOptions>(options);
         }
 
         /// <summary>
         /// Adds services required for using <see cref="ILoggingAspect{T}"/> using the supplied options.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
-        /// <param name="configurationSection">The <see cref="IConfigurationSection"/> with the <see cref="LoggingAspectOptions"/> to be configured.</param>
+        /// <param name="configurationSection">The <see cref="IConfigurationSection"/> with the <see cref="LoggingOptions"/> to be configured.</param>
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-        public static IServiceCollection AddLoggingAspect(this IServiceCollection services, IConfigurationSection configurationSection) {
+        public static IServiceCollection AddTinyLogging(this IServiceCollection services, IConfigurationSection configurationSection) {
             return services
                 .AddSingleton<ILoggableParser, DefaultLoggableParser>()
                 .AddSingleton(typeof(ILoggingAspect<>), typeof(DefaultLoggingAspect<>))
-                .Configure<LoggingAspectOptions>(configurationSection);
+                .AddSingleton<ILoggingTemplateHelper, DefaultLoggingTemplateHelper>()
+                .Configure<LoggingOptions>(configurationSection);
         }
     }
 }

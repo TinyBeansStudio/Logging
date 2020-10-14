@@ -2,9 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
-using TinyBeans.Logging.Abstractions;
 using TinyBeans.Logging.Attributes;
+using TinyBeans.Logging.Internals;
 
 namespace TinyBeans.Logging.Defaults {
 
@@ -12,8 +13,8 @@ namespace TinyBeans.Logging.Defaults {
     /// The default implementation of <see cref="ILoggableParser"/>.
     /// </summary>
     public class DefaultLoggableParser : ILoggableParser {
-        private static readonly ConcurrentDictionary<Type, (PropertyInfo property, SensitiveAttribute? sensitive)[]> _typeCache = new ConcurrentDictionary<Type, (PropertyInfo property, SensitiveAttribute? sensitive)[]>();
-        private static readonly Dictionary<string, object> _emptyDictionary = new Dictionary<string, object>();
+        private static readonly ConcurrentDictionary<Type, LoggableCache[]> _typeCache = new ConcurrentDictionary<Type, LoggableCache[]>();
+        private static readonly KeyValuePair<string, object>[] _emptyItems = Array.Empty<KeyValuePair<string, object>>();
 
         /// <summary>
         /// Used to parse loggable items from a state object.
@@ -21,45 +22,53 @@ namespace TinyBeans.Logging.Defaults {
         /// <typeparam name="TState">The type of object to parse the loggable items.</typeparam>
         /// <param name="state">The object to parse the loggable items.</param>
         /// <returns>A dictionary containing the parsed loggable items.</returns>
-        public Dictionary<string, object> ParseLoggable<TState>(TState state) {
+        public IEnumerable<KeyValuePair<string, object>> ParseLoggable<TState>(TState state) {
             if (state is null) {
-                return _emptyDictionary;
+                return _emptyItems;
             }
 
             var type = state.GetType();
-
             var items = _typeCache
                 .GetOrAdd(type, key => {
-                    var shouldLogAttribute = key.GetTypeInfo().GetCustomAttribute<LoggableAttribute>(false);
-                    if (shouldLogAttribute is null) {
-                        return Array.Empty<(PropertyInfo property, SensitiveAttribute? sensitive)>();
-                    }
-
-                    return key.GetTypeInfo().GetProperties().Select(x => (x, (SensitiveAttribute?)x.GetCustomAttribute<SensitiveAttribute>(true))).ToArray();
+                    return GetCache<TState>(key);
                 });
 
-            if (items.Count() == 0) {
-                return _emptyDictionary;
+            if (items.Length == 0) {
+                return _emptyItems;
             }
 
-            var loggables = new Dictionary<string, object>(items.Count());
+            var loggables = new List<KeyValuePair<string, object>>(items.Length);
 
             foreach (var item in items) {
-                object value;
-                if (item.sensitive is null) {
-                    value = item.property.GetValue(state);
-                } else if (item.sensitive.ReplacementValue is object) {
-                    value = item.sensitive.ReplacementValue;
-                } else {
-                    value = null!;
-                }
-
-                if (value is object) {
-                    loggables.Add($"{type.Name}_{item.property.Name}", value);
+                if (item.Replace is object) {
+                    loggables.Add(new KeyValuePair<string, object>(item.Key, item.Replace.Value));
+                } else if (item.Omit is null && ((Func<TState, object>)item.Lambda)(state) is object value) {
+                    loggables.Add(new KeyValuePair<string, object>(item.Key, value));
                 }
             }
 
             return loggables;
+        }
+
+        private static LoggableCache[] GetCache<TState>(Type stateType) {
+            var shouldLogAttribute = stateType.GetTypeInfo().GetCustomAttribute<LoggableAttribute>(false);
+            if (shouldLogAttribute is null) {
+                return Array.Empty<LoggableCache>();
+            }
+
+            return stateType.GetTypeInfo().GetProperties().Select(propertyInfo => {
+                var parameter = Expression.Parameter(stateType, "state");
+                var property = Expression.Property(parameter, propertyInfo.Name);
+                var convert = Expression.Convert(property, typeof(object));
+                var lambda = Expression.Lambda(typeof(Func<TState, object>), convert, parameter).Compile();
+
+                return new LoggableCache() {
+                    Key = $"{stateType.Name}_{propertyInfo.Name}",
+                    Lambda = lambda,
+                    Omit = propertyInfo.GetCustomAttribute<OmitAttribute>(false),
+                    Replace = propertyInfo.GetCustomAttribute<ReplaceAttribute>(false)
+                };
+            }).ToArray();
         }
     }
 }

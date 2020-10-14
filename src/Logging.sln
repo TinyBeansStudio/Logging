@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D2F8B40A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", "{AA67E56B-35EB-45A4-8868-CFCFEB9B43B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyBeans.Logging.Benchmarks", "..\benchmarks\TinyBeans.Logging.Benchmarks\TinyBeans.Logging.Benchmarks.csproj", "{7255F984-AC68-496B-90B3-F8FA7333C25F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyBeans.Logging.Benchmarks", "..\benchmarks\TinyBeans.Logging.Benchmarks\TinyBeans.Logging.Benchmarks.csproj", "{7255F984-AC68-496B-90B3-F8FA7333C25F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using TinyBeans.Logging.Abstractions;
 using TinyBeans.Logging.Defaults;
 using TinyBeans.Logging.Options;
 using TinyBeans.Logging.Tests.Dummy;
@@ -13,17 +12,17 @@ namespace TinyBeans.Logging.Tests.Defaults {
     public class DefaultLoggingAspectTests {
         private readonly Mock<ILogger<DefaultLoggingAspectTests>> _loggerMock = new Mock<ILogger<DefaultLoggingAspectTests>>();
         private readonly Mock<ILoggableParser> _loggableParserMock = new Mock<ILoggableParser>();
-        private readonly Mock<IOptionsMonitor<LoggingAspectOptions>> _loggingAspectOptionsMock = new Mock<IOptionsMonitor<LoggingAspectOptions>>();
+        private readonly Mock<IOptionsMonitor<LoggingOptions>> _loggingOptionsMock = new Mock<IOptionsMonitor<LoggingOptions>>();
 
-        private readonly LoggingAspectOptions _loggingAspectOptions = new LoggingAspectOptions();
+        private readonly LoggingOptions _loggingOptions = new LoggingOptions();
 
-        private DefaultLoggingAspect<DefaultLoggingAspectTests> Sut => new DefaultLoggingAspect<DefaultLoggingAspectTests>(_loggerMock.Object, _loggableParserMock.Object, _loggingAspectOptionsMock.Object);
+        private DefaultLoggingAspect<DefaultLoggingAspectTests> Sut => new DefaultLoggingAspect<DefaultLoggingAspectTests>(_loggerMock.Object, _loggableParserMock.Object, new DefaultLoggingTemplateHelper(), _loggingOptionsMock.Object);
 
         public DefaultLoggingAspectTests() {
             _loggerMock.Setup(x => x.IsEnabled(LogLevel.Trace)).Returns(true);
             _loggerMock.Setup(x => x.IsEnabled(LogLevel.Debug)).Returns(true);
             _loggableParserMock.Setup(x => x.ParseLoggable(It.IsAny<object>())).Returns(new Dictionary<string, object>() { { "Key", "Value" } });
-            _loggingAspectOptionsMock.Setup(x => x.CurrentValue).Returns(_loggingAspectOptions);
+            _loggingOptionsMock.Setup(x => x.CurrentValue).Returns(_loggingOptions);
         }
 
         [Fact]

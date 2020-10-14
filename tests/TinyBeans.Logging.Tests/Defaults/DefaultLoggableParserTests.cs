@@ -23,7 +23,7 @@ namespace TinyBeans.Logging.Tests.Defaults {
             };
             var items = Sut.ParseLoggable(dummy);
 
-            Assert.Equal(2, items.Count);
+            Assert.Equal(2, items.Count());
             Assert.Equal($"{nameof(DummyPocoShouldLog)}_{nameof(DummyPocoShouldLog.Property1)}", items.ElementAt(0).Key);
             Assert.Equal("Hello", items.ElementAt(0).Value);
             Assert.Equal($"{nameof(DummyPocoShouldLog)}_{nameof(DummyPocoShouldLog.Property2)}", items.ElementAt(1).Key);
@@ -39,7 +39,7 @@ namespace TinyBeans.Logging.Tests.Defaults {
             };
             var items = Sut.ParseLoggable(dummy);
 
-            Assert.Equal(2, items.Count);
+            Assert.Equal(2, items.Count());
             Assert.Equal($"{nameof(DummyPocoShouldLogSensitive)}_{nameof(DummyPocoShouldLogSensitive.Property1)}", items.ElementAt(0).Key);
             Assert.Equal("Hello", items.ElementAt(0).Value);
             Assert.Equal($"{nameof(DummyPocoShouldLogSensitive)}_{nameof(DummyPocoShouldLogSensitive.Property3)}", items.ElementAt(1).Key);
