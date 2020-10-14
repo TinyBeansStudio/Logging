@@ -9,8 +9,10 @@ namespace TinyBeans.Logging.Benchmarks {
     [SimpleJob]
     [MemoryDiagnoser]
     public class Benchmarks {
-        private readonly DefaultLoggableParser _sut = new DefaultLoggableParser();
+        private readonly DefaultLoggableParser _loggableParser = new DefaultLoggableParser();
+        private readonly DefaultLoggingTemplateHelper _loggingTemplateHelper = new DefaultLoggingTemplateHelper();
         private readonly DummyClass _dummyClass = new DummyClass();
+        private readonly DummyLogger<Benchmarks> _dummyLogger = new DummyLogger<Benchmarks>();
         private readonly DummyPoco _dummyPoco = new DummyPoco() { Property1 = "Hello", Property2 = "World", Property3 = "And JeffBot" };
         private readonly DummyPocoShouldLog _dummyPocoShouldLog = new DummyPocoShouldLog() { Property1 = "Hello", Property2 = "World", Property3 = "And JeffBot" };
         private readonly DummyPocoShouldLogSensitive _dummyPocoShouldLogSensitive = new DummyPocoShouldLogSensitive() { Property1 = "Hello", Property2 = "World", Property3 = "And JeffBot" };
@@ -25,38 +27,38 @@ namespace TinyBeans.Logging.Benchmarks {
             var options = builder.GetRequiredService<IOptionsMonitor<LoggingOptions>>();
             _options = options.CurrentValue;
 
-            _loggingAspect = new DefaultLoggingAspect<Benchmarks>(new DummyLogger<Benchmarks>(), new DefaultLoggableParser(), new DefaultLoggingTemplateHelper(), options);
+            _loggingAspect = new DefaultLoggingAspect<Benchmarks>(_dummyLogger, _loggableParser, _loggingTemplateHelper, options);
         }
 
-        // [Benchmark]
-        // public void OrderExecutingTemplate() {
-        //     Constants.OrderNames(_options._methodExecutingTemplate, "Hello", "World", "And JeffBot");
-        // }
-        //
-        // [Benchmark]
-        // public void OrderScopeTemplate() {
-        //     Constants.OrderNames(_options._scopeTemplate, "Hello", "World", "And JeffBot");
-        // }
-        //
-        // [Benchmark]
-        // public void OrderExecutedTemplate() {
-        //     Constants.OrderNames(_options._methodExecutedTemplate, "Hello", "World", "And JeffBot");
-        // }
-        //
-        // [Benchmark]
-        // public void NoAttribute() {
-        //     _ = _sut.ParseLoggable(_dummyPoco);
-        // }
-        //
-        // [Benchmark]
-        // public void ShouldLog() {
-        //     _ = _sut.ParseLoggable(_dummyPocoShouldLog);
-        // }
-        //
-        // [Benchmark]
-        // public void ShouldLogSensitive() {
-        //     _ = _sut.ParseLoggable(_dummyPocoShouldLogSensitive);
-        // }
+        [Benchmark]
+        public void OrderExecutingTemplate() {
+            _loggingTemplateHelper.OrderNames(_options.MethodExecutingTemplate, "Hello", "World", "And JeffBot");
+        }
+
+        [Benchmark]
+        public void OrderScopeTemplate() {
+            _loggingTemplateHelper.OrderNames(_options.ScopeTemplate, "Hello", "World", "And JeffBot");
+        }
+
+        [Benchmark]
+        public void OrderExecutedTemplate() {
+            _loggingTemplateHelper.OrderNames(_options.MethodExecutedTemplate, "Hello", "World", "And JeffBot");
+        }
+
+        [Benchmark]
+        public void NoAttribute() {
+            _ = _loggableParser.ParseLoggable(_dummyPoco);
+        }
+
+        [Benchmark]
+        public void ShouldLog() {
+            _ = _loggableParser.ParseLoggable(_dummyPocoShouldLog);
+        }
+
+        [Benchmark]
+        public void ShouldLogSensitive() {
+            _ = _loggableParser.ParseLoggable(_dummyPocoShouldLogSensitive);
+        }
 
         [Benchmark]
         public void Full() {

@@ -12,15 +12,16 @@
 		<Description>TinyBeans.Logging contains objects to assist in better application logging without cluttering your code.</Description>
 		<PackageProjectUrl>https://github.com/TinyBeansStudio/Logging</PackageProjectUrl>
 		<PackageTags>Logging</PackageTags>
-		<Version>1.0.1</Version>
+		<Version>2.0.0-prerelease01</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>© 2020 Tiny Beans, LLC</Copyright>
 		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.9" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.9" />
+		<PackageReference Include="TinyBeans.Logging.Abstractions" Version="2.0.0-prerelease01" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -28,9 +29,5 @@
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\TinyBeans.Logging.Abstractions\TinyBeans.Logging.Abstractions.csproj" />
 	</ItemGroup>
 </Project>
