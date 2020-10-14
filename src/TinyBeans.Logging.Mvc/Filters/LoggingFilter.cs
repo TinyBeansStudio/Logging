@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TinyBeans.Logging.Abstractions;
+using TinyBeans.Logging.Defaults;
 using TinyBeans.Logging.Options;
 
 namespace TinyBeans.Logging.Mvc.Filters {
@@ -70,7 +70,7 @@ namespace TinyBeans.Logging.Mvc.Filters {
                     }
                 }
 
-                var names = Names(_options.CurrentValue.MethodExecutingTemplate, context);
+                var names = Names(_options.CurrentValue._methodExecutingTemplate, context);
 
                 _logger.Log(_options.CurrentValue.ExecutionLogLevel, _options.CurrentValue.MethodExecutingTemplate, names[0], names[1], names[2]);
             } finally {
@@ -102,12 +102,12 @@ namespace TinyBeans.Logging.Mvc.Filters {
         }
 
         private IDisposable GetScope(ActionExecutingContext context) {
-            var names = Names(_options.CurrentValue.ScopeTemplate, context);
+            var names = Names(_options.CurrentValue._scopeTemplate, context);
 
             return _logger.BeginScope(_options.CurrentValue.ScopeTemplate, names[0], names[1], names[2]);
         }
 
-        private string[] Names(string template, ActionExecutingContext context) {
+        private string[] Names(Template template, ActionExecutingContext context) {
             var names = _actionInformationCache.GetOrAdd(context.ActionDescriptor.Id, key => {
                 return new string[] {
                     context.Controller.GetType().Assembly.GetName().Name,
@@ -116,7 +116,7 @@ namespace TinyBeans.Logging.Mvc.Filters {
                 };
             });
 
-            return Template.OrderNames(template, names[0], names[1], names[2]);
+            return DefaultLoggingTemplateHelper.OrderNames(template, names[0], names[1], names[2]);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using TinyBeans.Logging.Abstractions;
 using TinyBeans.Logging.Defaults;
 using TinyBeans.Logging.Options;
 using TinyBeans.Logging.Tests.Dummy;
@@ -17,7 +16,7 @@ namespace TinyBeans.Logging.Tests.Defaults {
 
         private readonly LoggingOptions _loggingOptions = new LoggingOptions();
 
-        private DefaultLoggingAspect<DefaultLoggingAspectTests> Sut => new DefaultLoggingAspect<DefaultLoggingAspectTests>(_loggerMock.Object, _loggableParserMock.Object, _loggingOptionsMock.Object);
+        private DefaultLoggingAspect<DefaultLoggingAspectTests> Sut => new DefaultLoggingAspect<DefaultLoggingAspectTests>(_loggerMock.Object, _loggableParserMock.Object, new DefaultLoggingTemplateHelper(), _loggingOptionsMock.Object);
 
         public DefaultLoggingAspectTests() {
             _loggerMock.Setup(x => x.IsEnabled(LogLevel.Trace)).Returns(true);

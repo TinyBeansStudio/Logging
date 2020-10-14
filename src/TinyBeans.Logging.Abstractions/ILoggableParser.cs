@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TinyBeans.Logging.Abstractions {
+namespace TinyBeans.Logging {
 
     /// <summary>
     /// Represents a type used to parse loggable items from a state object.
