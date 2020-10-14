@@ -15,33 +15,33 @@ public class Startup {
 
     public void ConfigureServices(IServiceCollection services) {
         services
-            .AddLoggingAspect();
+            .AddTinyLogging();
 
         services
-            .AddLoggingAspect(options => {
+            .AddTinyLogging(options => {
                 // Removed for brevity
             });
 
         services
-            .AddLoggingAspect(_configuration.GetSection("LoggingAspect"));
+            .AddTinyLogging(_configuration.GetSection("TinyLogging"));
     }
 }
 ```
 
 ```json
 {
-  "LoggingAspect": {
+  "TinyLogging": {
     "ExecutionLogLevel": "Debug",
-    "MethodExecutedTemplate": "Executed method {MethodName} on class {ClassName} in assembly {AssemblyName}.",
-    "MethodExecutingTemplate": "Executing method {MethodName} on class {ClassName} in assembly {AssemblyName}.",
-    "ScopeTemplate": "{ClassName}.{MethodName} ({AssemblyName})",
+    "MethodExecutedTemplateValue": "Executed method {MethodName} on class {ClassName} in assembly {AssemblyName}.",
+    "MethodExecutingTemplateValue": "Executing method {MethodName} on class {ClassName} in assembly {AssemblyName}.",
+    "ScopeTemplateValue": "{ClassName}.{MethodName} ({AssemblyName})",
     "StateItemsLogLevel": "Trace"
   }
 }
 ```
 
   
-Second, replace your current ILogger&lt;T&gt; dependency with ILoggingAspect&lt;T&gt;.  Don't worry, there is an ILogger&lt;T&gt; property on the ILoggingAspect&lt;T&gt; interface so you will not need another dependency for additional logging.
+Second, replace your current ILogger&lt;T&gt; dependency with ILoggingAspect&lt;T&gt;.  Don't worry, there is an ILogger&lt;T&gt; property on the ILoggingAspect&lt;T&gt; interface, so you will not need another dependency for additional logging.
 ```cs
 [Route("/sample")]
 public class SampleController : ControllerBase {
@@ -64,20 +64,20 @@ var product = await _loggingAspect.InvokeAsync(_sampleManager.SampleMethod, crit
 And with that, pending your log levels allow for it, your application will now log when a method is executing and has executed, along with adding a scope indicating the method you are in.
 
 ## But wait, there's more!
-The ILoggingAspect&lt;T&gt; also uses an ILoggableParser which, if your method parameters and results are decorated with the LoggableAttribute, will add a Dictionary&lt;string, object&gt; scope of all the properties when logging method executing and executed.  If the LoggableAttribute is supplied on the class, you can omit properties with the SensitiveAttribute.  If the SensitiveAttribute is supplied without a replacement value, the property will be omitted.  If a replacement value is specified, it will replace the value when added to the Dictionary&lt;string, object&gt; scope.
+The ILoggingAspect&lt;T&gt; also uses an ILoggableParser which, if your method parameters and results are decorated with the LoggableAttribute, will add a Dictionary&lt;string, object&gt; scope of all the properties when logging method executing and executed.  If the LoggableAttribute is supplied on the class, you can omit properties with the OmitAttribute.  If you wish to substitute the property value with a different one, use the ReplaceAttribute.  Replacement values do not need to match the property type.
 ```cs
 [Loggable]
 public class SampleCriteria {
     public Guid Id { get; set; }
     public string EmailAddress { get; set; }
 
-    [Sensitive(ReplacementValue = "USERNAME EXCLUDED")]
+    [Replace("USERNAME EXCLUDED")]
     public string Username { get; set; }
 
-    [Sensitive]
+    [Omit]
     public string Password { get; set; }
 }
 ```
 
-## Note
-The intended use of this component is to aid in solving runtime issues by supplying information in the form of log properties.  It is not intended for logging large object graphs.
+## Notes
+This component was designed with a specific purpose in mind, that being to aid in logging between layers in an application written around the iDesign architecture pattern.  It was also designed with the intention that calls into other layers would be done with strongly typed classes and not just strings or value types.  I have not tested the results of passing strings or value types, nor is it a scenario I intend to support.
