@@ -12,7 +12,7 @@
 		<Description>TinyBeans.Logging.Abstractions contains the common interfaces for TinyBeans.Logging.</Description>
 		<PackageProjectUrl>https://github.com/TinyBeansStudio/Logging</PackageProjectUrl>
 		<PackageTags>Logging</PackageTags>
-		<Version>2.0.0-prerelease01</Version>
+		<Version>2.0.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>© 2020 Tiny Beans, LLC</Copyright>
 		<PackageIcon>icon.png</PackageIcon>
