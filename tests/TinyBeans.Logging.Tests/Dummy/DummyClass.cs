@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿#pragma warning disable IDE0060 // Remove unused parameter
+
+using System.Threading.Tasks;
 
 namespace TinyBeans.Logging.Tests.Dummy {
     internal class DummyClass {

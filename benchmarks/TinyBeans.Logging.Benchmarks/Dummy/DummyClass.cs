@@ -1,4 +1,6 @@
-﻿namespace TinyBeans.Logging.Benchmarks.Dummy {
+﻿#pragma warning disable IDE0060 // Remove unused parameter
+
+namespace TinyBeans.Logging.Benchmarks.Dummy {
     public class DummyClass {
         public DummyPocoShouldLogSensitive ResultMethod(DummyPocoShouldLog dummyPoco1, DummyPocoShouldLog dummyPoco2, DummyPocoShouldLog dummyPoco3, DummyPocoShouldLog dummyPoco4, DummyPocoShouldLog dummyPoco5) {
             return new DummyPocoShouldLogSensitive() {
